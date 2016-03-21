@@ -17,10 +17,17 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from student_manage import ajax
+from core import views as core_view
+from core import ajax  as core_ajax
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^graduate/', include('graduate.urls'), name='graduate'),
+
+    url(r'^accounts/login/$',  core_view.login,  name='login'),
+
+    url(r'^accounts/logout/$', core_view.logout, name='logout'),
 
 
 ]
@@ -28,6 +35,8 @@ urlpatterns = [
 urlpatterns += [
 
     url(r'^content/index/$', ajax.index),
+    url(r'^content/login/$', core_ajax.login),
+    url(r'^content/logout/$', core_ajax.logout),
 
 
 ]

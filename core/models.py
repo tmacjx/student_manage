@@ -135,8 +135,8 @@ class PaperDocuments(models.Model):
         (2, '论文正稿'),
     )
     DOCUMENT_STATUS = (
-        (0, '未上交'),
-        (1, '已上交'),
+        (0, '未上传'),
+        (1, '已上传'),
     )
     # paper_section = models.ForeignKey(PaperSection, verbose_name=u'论文题目')
     thesis = models.ForeignKey(Thesis, verbose_name=u'论文选题')
@@ -149,6 +149,28 @@ class PaperDocuments(models.Model):
 
     class Meta:
         unique_together = ('thesis', 'student', 'type')
+
+
+class PaperDemo(models.Model):
+    DOCUMENT_TYPE = (
+        (0, '开题报告'),
+        (1, '外文翻译'),
+        (2, '论文正稿'),
+    )
+    DOCUMENT_STATUS = (
+        (0, '未上传'),
+        (1, '已上传'),
+    )
+    thesis = models.ForeignKey(Thesis, verbose_name=u'论文选题')
+    type = models.SmallIntegerField(choices=DOCUMENT_TYPE, verbose_name=u'文档范例类型')
+    status = models.SmallIntegerField(choices=DOCUMENT_STATUS, verbose_name=u'文档范例状态')
+    title = models.CharField(max_length=100, verbose_name=u'文档范例标题')
+    file = models.FileField(blank=True, upload_to='/paper_demo', verbose_name=u'文档范例链接')
+    upload_time = models.DateTimeField(verbose_name=u'上传时间', auto_now_add=True)
+    modify_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)
+
+    class Meta:
+        unique_together = ('thesis', 'type')
 
 
 

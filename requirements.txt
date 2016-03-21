@@ -1,2 +1,4 @@
 django==1.9
 simplejson
+selenium
+django-guardian

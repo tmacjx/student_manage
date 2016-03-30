@@ -23,27 +23,27 @@ class Speciality(models.Model):
         (11, u'管理学'),
     )
 
-    ID = models.IntegerField(unique=True, verbose_name=u'专业ID')
+    index = models.IntegerField(unique=True, verbose_name=u'专业ID')
     name = models.CharField(max_length=100, unique=True, verbose_name=u'专业名称')
     short_name = models.CharField(max_length=20, verbose_name=u'专业简称')
     type = models.SmallIntegerField(choices=SPECIALITY_TYPE, verbose_name=u'专业分类')
 
 
 class Department(models.Model):
-    ID = models.IntegerField(verbose_name=u'系ID')
+    index = models.IntegerField(verbose_name=u'系ID')
     name = models.CharField(max_length=100, verbose_name=u'系名称')
-    speciality = models.ForeignKey(Speciality, unique=True, verbose_name=u'专业')
+    speciality = models.OneToOneField(Speciality, verbose_name=u'专业')
 
 
 class Academy(models.Model):
-    ID = models.IntegerField(verbose_name=u'学院ID')
+    index = models.IntegerField(verbose_name=u'学院ID')
     name = models.CharField(max_length=100, verbose_name=u'学院名称')
-    department = models.ForeignKey(Department, unique=True, verbose_name=u'系')
+    department = models.OneToOneField(Department, verbose_name=u'系')
 
 
 class Student(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
-    ID = models.IntegerField(unique=True, verbose_name=u'学生ID')
+    index = models.IntegerField(unique=True, verbose_name=u'学生ID')
     name = models.CharField(max_length=100, verbose_name=u'学生名')
     image = models.ImageField(verbose_name=u'头像', upload_to='/avatar', blank=True, default='/avatar/default.jpg')
     academy = models.ForeignKey(Academy, verbose_name=u'所在学院')
@@ -51,17 +51,10 @@ class Student(models.Model):
     Speciality = models.ForeignKey(Speciality, verbose_name=u'专业')
     cellphone = models.CharField(max_length=15, verbose_name=u'手机号')
 
-    class Meta:
-        permissions = (
-            ('view_student',   'Can see available student'),
-            ('change_student', 'Can change available student'),
-            ('delete_student', 'Can delete available student')
-        )
-
 
 class Instructor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
-    ID = models.IntegerField(unique=True, verbose_name=u'教师ID')
+    index = models.IntegerField(unique=True, verbose_name=u'教师ID')
     name = models.CharField(max_length=10, verbose_name=u'教师名')
     image = models.ImageField(verbose_name=u'头像', upload_to='/avatar', blank=True, default='/avatar/default.jpg')
     academy = models.ForeignKey(Academy, verbose_name=u'所在学院')
@@ -69,29 +62,15 @@ class Instructor(models.Model):
     Speciality = models.ForeignKey(Speciality, verbose_name=u'专业')
     cellphone = models.CharField(max_length=15, verbose_name=u'手机号')
 
-    class Meta:
-        permissions = (
-            ('view_instructor',   'Can see available instructor'),
-            ('change_instructor', 'Can see available instructor'),
-            ('delete_instructor', 'Can delete available instructor'),
-        )
-
 
 class Admin(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL)
-    ID = models.IntegerField(unique=True, verbose_name=u'管理员ID')
+    index = models.IntegerField(unique=True, verbose_name=u'管理员ID')
     name = models.CharField(max_length=10, verbose_name=u'管理员名称')
     image = models.ImageField(verbose_name=u'头像', upload_to='/avatar', blank=True, default='/avatar/default.jpg')
     academy = models.ForeignKey(Academy, verbose_name=u'所在学院')
     department = models.ForeignKey(Department, verbose_name=u'所在系')
     cellphone = models.CharField(max_length=15, verbose_name=u'手机号')
-
-    class Meta:
-        permissions = (
-            ('view_admin',   'Can see admin'),
-            ('change_admin', 'Can change admin'),
-            ('delete_admin', 'Can delete admin'),
-        )
 
 
 class Thesis(models.Model):
@@ -101,7 +80,7 @@ class Thesis(models.Model):
         (2, '未选中'),
         (3, '已选中'),
     )
-    ID = models.IntegerField(unique=True, verbose_name=u'论文ID')
+    index = models.IntegerField(unique=True, verbose_name=u'论文ID')
     title = models.CharField(max_length=200, verbose_name=u'论文题目')
     content = models.TextField(verbose_name=u'论文要求')
     instructor = models.ForeignKey(Instructor, verbose_name=u'辅导老师')
@@ -112,17 +91,11 @@ class Thesis(models.Model):
     create_time = models.DateField(verbose_name=u'创建时间', auto_now_add=True)
     modify_time = models.DateField(verbose_name=u'修改时间', auto_now=True)
 
-    class Meta:
-        permissions = (
-            ('view_thesis',   'Can see available thesis'),
-            ('change_thesis', 'Can change available thesis'),
-            ('delete thesis', 'Can delete available thesis')
-        )
-
 
 class PaperSection(models.Model):
-    thesis = models.ForeignKey(Thesis, unique=True, verbose_name=u'论文选题')
-    student = models.ForeignKey(Student, unique=True, verbose_name=u'学生')
+    # thesis = models.ForeignKey(Thesis, unique=True, verbose_name=u'论文选题')
+    thesis = models.OneToOneField(Thesis, verbose_name=u'论文选题')
+    student = models.OneToOneField(Student, verbose_name=u'学生')
     create_time = models.DateField(verbose_name=u'选中时间', auto_now_add=True)
     modify_time = models.DateField(verbose_name=u'改动时间', auto_now=True)
     # file = models.FileField(verbose_name=u'论文文档', blank=True)
@@ -142,7 +115,7 @@ class PaperDocuments(models.Model):
     thesis = models.ForeignKey(Thesis, verbose_name=u'论文选题')
     student = models.ForeignKey(Student, verbose_name=u'学生')
     type = models.SmallIntegerField(choices=DOCUMENT_TYPE, verbose_name=u'文档类型')
-    status = models.SmallIntegerField(DOCUMENT_STATUS, verbose_name=u'文档状态')
+    status = models.SmallIntegerField(choices=DOCUMENT_STATUS, verbose_name=u'文档状态')
     file = models.FileField(upload_to='/paper', verbose_name=u'文档')
     upload_time = models.DateTimeField(verbose_name=u'上交时间', auto_now_add=True)
     modify_time = models.DateTimeField(verbose_name=u'修改时间', auto_now=True)

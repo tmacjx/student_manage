@@ -14,11 +14,12 @@ Including another URLconf
     2. Import the include() function: from django.conf.urls import url, include
     3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import url, include
+from django.conf.urls import url, include, patterns
 from django.contrib import admin
 from student_manage import ajax
 from core import views as core_view
-from core import ajax  as core_ajax
+from core import ajax as core_ajax
+from student_manage import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -29,6 +30,8 @@ urlpatterns = [
 
     url(r'^accounts/logout/$', core_view.logout, name='logout'),
 
+    url(r'^superadmin/$', core_view.super_admin, name='superadmin'),
+
 
 ]
 
@@ -36,7 +39,13 @@ urlpatterns += [
 
     url(r'^content/index/$', ajax.index),
     url(r'^content/login/$', core_ajax.login),
-    url(r'^content/logout/$', core_ajax.logout),
-
-
+    url(r'^content/logout/$', core_ajax.logout)
 ]
+
+if settings.DEBUG:
+    urlpatterns = patterns('',
+                           url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+                               {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+                           url(r'', include(
+                               'django.contrib.staticfiles.urls')),
+                           ) + urlpatterns

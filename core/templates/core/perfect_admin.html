@@ -1,0 +1,206 @@
+{% extends '_account_base.html' %} {% block title %} 管理后台 | 登录 {% endblock %} {% block css %}
+<link rel="stylesheet" href="/static/css/main.css"> {% endblock %} {% block content-title %}
+<h2 style="text-align: center">本科生毕业设计管理系统 </h2> {% endblock %} {% block content %}
+<div class="perfect-info">
+    <!-- Horizontal Form -->
+    <div class="box box-info" style="display: inline-block;">
+        <div class="box-header with-border">
+            <h3 class="box-title">完善资料</h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <form class="form-horizontal">
+            <div class="box-body">
+                <div class="form-group">
+                    <label for="index" class="col-sm-2 control-label">管理员ID</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="index">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">姓名</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="image" class="col-sm-2 control-label">头像</label>
+                    <div class="col-sm-10">
+                        <input type="file" class="form-control" id="image">
+                        <p class="help-block">图片大小请保持在2M以内，支持jpg、jpeg、png格式</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <!-- TODO  academy数据从后台ajax获取， 给select增加 onchange事件 -->
+                    <label for="academy" class="col-sm-2 control-label">学院</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" id='academy'>
+                            <option>option 1</option>
+                            <option>option 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cellphone" class="col-sm-2 control-label">手机号</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="cellphone">
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <!--                     <button type="submit" class="btn btn-default">Cancel</button>
+ -->
+                <button type="submit" class="btn btn-info pull-right" id='btn_submit'> 提交 </button>
+            </div>
+            <!-- /.box-footer -->
+        </form>
+    </div>
+    <!-- /.box -->
+</div>
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+function isEmpty(obj) {
+    var input = $.trim($(obj).val());
+    if (this.hasVal(obj)) {
+        if (input == '') {
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return true;
+    }
+}
+
+function check_input() {
+    if (isEmpty('#index')) {
+        alert('管理员ID不能为空');
+        return false;
+    }
+    if (isEmpty('#name')) {
+        alert('姓名不能为空');
+        return false;
+    }
+    if (isEmpty('#academy')) {
+        alart('学院不能为空');
+        return false;
+    }
+
+
+    var hasPhone = function(obj) {
+        val tel = $.trim($(obj).val());
+
+        if (this.hasVal(obj)) {
+            if ((/^13\d{9}$/g.test(tel)) || (/^15\d{9}$/g.test(tel))) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    };
+
+    if (hasPhone('#cellphone')) {
+        return true;
+    } else {
+        alert('手机为空或者手机格式不对')；
+        return false;
+    }
+
+}
+
+$(document).ready(function() {
+   
+    var img = $('#image').val();
+
+
+   
+
+    $('#image').on('change', function(){
+
+         var image_path = $(this).val();
+
+         var image = new Image();
+         image.src = image_path;
+         image.onload = function(){
+         var base64 = getBase64Image(image);
+         console.log(base64);
+         };
+    });
+
+    $('#btn_submit').on('click', function() {
+
+        // 检查必选项，处理为空的情况
+        if (!check_input()) {
+            return false;
+        } else {
+            var index = $('#index').val();
+            var name = $('#name').val();
+            var academy = $('#academy').val();
+            var cellphone = $('#cellphone').val();
+
+            // TODO 图片如何转为base64 ajax处理
+            // var image = $('#image').val();
+
+
+            $.post('/accont/content/perfect_admin/', {
+                index: index,
+                name: name,
+                academy: academy,
+                cellphone: cellphone,
+                csrfmiddlewaretoken: $.cookie('csrftoken')
+            }, function(data) {
+
+                if (data.status) {
+
+                    //TODO 跳转到 管理员index页面？
+
+                } else {
+                    alert(data.msg)
+                }
+            });
+        }
+    });
+
+});
+
+
+function getBase64Image(img) {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+    var ext = img.src.substring(img.src.lastIndexOf(".")+1).toLowerCase();
+            var dataURL = canvas.toDataURL("image/"+ext);
+    return dataURL;
+}
+
+// var img = "http://127.0.0.1/base64/1.jpg";
+// function getBase64Image(img) {
+//     var canvas = document.createElement("canvas");
+//     canvas.width = img.width;
+//     canvas.height = img.height;
+//     var ctx = canvas.getContext("2d");
+//     ctx.drawImage(img, 0, 0, img.width, img.height);
+//     var ext = img.src.substring(img.src.lastIndexOf(".")+1).toLowerCase();
+//             var dataURL = canvas.toDataURL("image/"+ext);
+//     return dataURL;
+// }
+// var image = new Image();
+// image.src = img;
+// image.onload = function(){
+//     var base64 = getBase64Image(image);
+//     console.log(base64);
+// }
+
+
+</script>
+{% endblock %}
+
+
+
+
+

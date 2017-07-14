@@ -1,0 +1,306 @@
+{% extends '_base.html' %} {% block css %} {% endblock %} {% block user_account %}
+<li class="dropdown user user-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <img src="/media/avatar/default.jpg" class="user-image" alt="User Image">
+        <span class="hidden-xs"> {{ user.username }}</span>
+    </a>
+    <ul class="dropdown-menu">
+        <!-- User image -->
+        <li class="user-header">
+            <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+            <p>
+             {{ user.username }}
+                <small> {{ system_info }} </small>
+            </p>
+        </li>
+        <!-- Menu Footer-->
+        <li class="user-footer">
+            <div class="pull-left">
+                <a href="/account/perfect_admin/" class="btn btn-default btn-flat">Profile</a>
+            </div>
+            <div class="pull-right">
+                <a href="javascript:void(0);" onclick="sign_out()" id="logout_submit" class="btn btn-default btn-flat">Sign out</a>
+            </div>
+        </li>
+    </ul>
+</li>
+{% endblock %} {% block user-panel %}
+<!-- TODO 关于用户左侧头像 和右侧信息（包含标记个人信息， 登陆按钮）归入 _bsae.html中？？ -->
+<div class="pull-left image">
+    <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+</div>
+<div class="pull-left info">
+    <p> {{ user.username }} </p>
+    <!--     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+ --><a href="#"><i class="fa fa-circle text-success"></i> {{ system_info }}</a>
+</div>
+{% endblock %} {% block slide %}
+<!-- <ul class="sidebar-menu">
+        <li class="header">操作</li>
+                <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                        </ul>
+        </li>
+  </ul> -->
+<ul class="sidebar-menu">
+    <li class="header">操作选项</li>
+    <li class="treeview">
+        <a href="{% url 'show_group' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置权限组</span>
+        </a>
+    </li>
+    <li class="active treeview">
+        <a href="{% url 'show_academy' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置院系信息</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="{% url 'show_speciality' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置专业信息</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="{% url 'show_admin' %}">
+            <!--   <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置管理员</span>
+        </a>
+    </li>
+    </li>
+</ul>
+{% endblock %} {% block content-header %}
+<h1>
+      配置
+            <small> 院系信息 </small>
+</h1>
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+    <li class="active"> 配置院系信息 </li>
+</ol>
+{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">数据表</h3>&nbsp; &nbsp; &nbsp;
+                <a href="#"> <span class="glyphicon glyphicon-plus" aria-hidden="true" data-toggle="modal" data-target="#addModal">
+                             </span> </a>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>学院ID</th>
+                            <th>学院名称</th>
+                            <th>学院简称</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in academy_all %}
+                        <tr data-target="{{ item.id }}">
+                            <td>{{ item.index }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.short_name }}</td>
+                            <td>
+                                <a href="#"> <span class="link_edit glyphicon glyphicon-wrench" aria-hidden="true"></span> </a>
+                                <a href="#"> <span class="link_delete glyphicon glyphicon-remove" aria-hidden="true" data-toggle="modal" data-target="#deleteModal">
+                                </span> </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div style="text-align:center">
+                    <ul class="pagination">
+                        {% if academy_all.has_previous %}
+                        <li class="paginate_button previous">
+                            <a tabindex="0" data-dt-idx="0" aria-controls="example1" href='?page={{ academy_all.previous_page_number }}'> 上一页 </a>
+                        </li>
+                        {% endif %} {% for page in academy_all.paginator.page_range %} {% if page = academy_all.number %}
+                        <li class="paginate_button active">
+                            <a tabindex="0" data-dt-idx="1" aria-controls="example1" href="?page={{ page }}">  {{ page }}   </a>
+                        </li>
+                        {% else %}
+                        <li class="paginate_button ">
+                            <a tabindex="0" data-dt-idx="2" aria-controls="example1" href="?page={{ page }}">  {{ page }}   </a>
+                        </li>
+                        {% endif %} {% endfor %} {% if academy_all.has_next %}
+                        <li id="example1_next" class="paginate_button next">
+                            <a tabindex="0" data-dt-idx="7" aria-controls="example1" href='?page={{ academy_all.next_page_number }}'>  下一页  </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+<!-- addModal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">新增学院信息</h4>
+            </div>
+            <div class="modal-body">
+                <form id='add-form' method='post' enctype="multipart/form-data" class="form-horizontal">
+                    <!-- TODO input居中显示在modal -->
+                    {% csrf_token %}
+                    <div class="form-group has-feedback">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="学院ID" id='index'>
+                            <span class="glyphicon glyphicon-sort-by-order form-control-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="学院名称" id='name'>
+                            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="学院简称" id='short_name'>
+                            <span class="glyphicon glyphicon-minus form-control-feedback"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id='btn_add_submit'>提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  delete modal -->
+<div class="modal fade bs-example-modal-sm1" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">你确认删除么？</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id='btn_delete_submit'>确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+function check_input() {
+
+    if (!Fn.hasVal('#index')) {
+        alert('学院ID不能为空');
+        return false;
+    }
+
+    if (!Fn.isNumber("#index")) {
+        alert("学院ID必须为数字");
+        return false;
+    }
+
+    if (!Fn.hasVal("#name")) {
+        alert("学院名称不能为空");
+        return false;
+    }
+
+    if (!Fn.hasVal("#short_name")) {
+        alert("学院简称不能为空");
+        return false;
+    }
+    return true;
+}
+
+function create_academy() {
+    var index = $("#index").val();
+    var name = $("#name").val();
+    var short_name = $("#short_name").val();
+
+    $.post('/account/content/create_academy/', {
+        index: index,
+        name: name,
+        short_name: short_name,
+        csrfmiddlewaretoken: $.cookie('csrftoken')
+    }, function(data) {
+
+        if (data.status) {
+            window.location.reload();
+        } else {
+            alert(data.msg);
+        }
+    });
+}
+function sign_out(){
+
+    $.post('/account/content/logout/', {csrfmiddlewaretoken: $.cookie('csrftoken')}, function(data){
+    
+        if(data.status){
+        
+          alert(data.msg);
+          var full_url = "/account/login/";
+          window.location.href = full_url;
+            
+        }else{
+          alert(data.msg)
+            
+        }   
+    });
+}
+$(document).ready(function() {
+
+
+    $('#btn_add_submit').on('click', function(event) {
+        if (!check_input()) {
+            return false;
+        } else {
+            create_academy();
+            return false;
+        }
+    });
+
+    $('#deleteModal').on('show.bs.modal', function(event) {
+        // do something...
+
+
+        var $button = $(event.relatedTarget);
+
+        var $tr = $button.parents('tr');
+
+        var academy_id = $tr.data('target');
+
+        $('#btn_delete_submit').on('click', function() {
+
+            $.post('/account/content/delete_academy/', {
+                academy: academy_id,
+                csrfmiddlewaretoken: $.cookie('csrftoken')
+            }, function(data) {
+
+                if (data.status) {
+                    window.location.reload();
+                } else {
+                    alert(data.msg);
+                }
+
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

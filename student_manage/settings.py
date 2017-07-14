@@ -25,7 +25,7 @@ SECRET_KEY = '#j%7r2nc7l9$elc0uu1=18)iidvxw7_d4_8vx4en0-o_#7xzg8'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    # 'django.contrib.staticfiles',
     'graduate',
     'guardian',
     'core',
@@ -114,7 +114,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # this is default
+    'django.contrib.auth.backends.RemoteUserBackend',
+    'django.contrib.auth.backends.ModelBackend',  # this is default
     'guardian.backends.ObjectPermissionBackend',
 )
 
@@ -138,6 +139,37 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-DOCS_ROOT = os.path.join(BASE_DIR, 'docs')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+DOCS_ROOT = os.path.join(BASE_DIR, 'docs/')
+
+
+# DEFAULT_FROM_EMAIL = '1737983760@qq.com'
+#
+# # Send mail settings
+# # EMAIL_USE_TLS = True
+#
+# EMAIL_USE_SSL = True
+# EMAIL_HOST = 'smtp.qq.com'
+# EMAIL_HOST_USER = '1737983760@qq.com'
+# EMAIL_HOST_PASSWORD = 'test123456789'
+# EMAIL_PORT = 465
+
+
+DEFAULT_FROM_EMAIL = '381221780@qq.com'
+
+# Send mail settings
+# EMAIL_USE_TLS = True
+
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.qq.com'
+EMAIL_HOST_USER = '381221780@qq.com'
+EMAIL_HOST_PASSWORD = 'mcgrady7614686'
+EMAIL_PORT = 465
+
+
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+
+# STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"), )

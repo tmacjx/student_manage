@@ -1,0 +1,138 @@
+{% extends '_base.html' %} {% block css %} {% endblock %} {% block user-panel %}
+<!-- TODO 关于用户左侧头像 和右侧信息（包含标记个人信息， 登陆按钮）归入 _bsae.html中？？ -->
+<div class="pull-left image">
+    <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+</div>
+<div class="pull-left info">
+    <p>Alexander Pierce</p>
+    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+</div>
+{% endblock %} {% block slide %}
+<!-- <ul class="sidebar-menu">
+        <li class="header">操作</li>
+                <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                        </ul>
+        </li>
+  </ul> -->
+<ul class="sidebar-menu">
+    <li class="header">操作选项</li>
+    <li class="active treeview">
+        <a href="#">
+            <i class="fa fa-edit"></i> <span> 配置院系信息</span>
+        </a>
+    </li>
+    <li class="active treeview">
+        <a href="#">
+            <i class="fa fa-edit"></i> <span> 配置专业信息</span>
+        </a>
+    </li>
+    <li class="active treeview">
+        <a href="#">
+            <i class="fa fa-edit"></i> <span> 配置管理员</span>
+        </a>
+    </li>
+    </li>
+</ul>
+{% endblock %} {% block content-header %}
+<h1>
+      配置
+            <small> 院系信息 </small>
+</h1>
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+    <li class="active"> 配置院系信息 </li>
+</ol>
+{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">数据表</h3>
+            </div>
+
+
+            <!-- TODO 这里的div有问题 -->
+
+             <div class='row'>
+
+                <div class="col-sm-1">
+                <!-- TODO 新增一个＋的icon -->
+                <button class="btn btn-block btn-primary id='btn_add'">新增</button>
+                </div>
+
+             </div>
+
+
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>学院ID</th>
+                            <th>学院名称</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                     {% for item in academy_list %}
+                        <tr>
+                            <td>{{ item.index }}</td>
+                            <td>{{ item.name }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                   
+                </table>
+                <div class='row'>
+                    <div class="col-sm-12">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                            <ul class="pagination">
+                                <li class="paginate_button previous disabled" id="example2_previous"><a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a></li>
+                                <li class="paginate_button active"><a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">2</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="3" tabindex="0">3</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="4" tabindex="0">4</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="5" tabindex="0">5</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="6" tabindex="0">6</a></li>
+                                <li class="paginate_button next" id="example2_next"><a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0">Next</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+{% endblock %} {% block javascript %} {% endblock %}
+
+
+
+
+ <!-- TODO table的每一个tr都新增一个checkbox选项, 编辑之可以 选择单个， 删除 支持删除多个 -->
+<!-- <div class="checkbox">
+    <label>
+            <input type="checkbox">
+            Checkbox 1
+    </label>
+</div> -->
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,335 @@
+{% extends '_base.html' %} {% block css %} {% endblock %} {% block user_account %}
+<li class="dropdown user user-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <img src="/media/avatar/default.jpg" class="user-image" alt="User Image">
+        <span class="hidden-xs"> {{ user.username }} </span>
+    </a>
+    <ul class="dropdown-menu">
+        <!-- User image -->
+        <li class="user-header">
+            <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+            <p>
+               {{ user.username }}
+                <small> {{ system_info }} </small>
+            </p>
+        </li>
+        <!-- Menu Footer-->
+        <li class="user-footer">
+            <div class="pull-left">
+                <a href="/account/perfect_admin/" class="btn btn-default btn-flat">Profile</a>
+            </div>
+            <div class="pull-right">
+                <a href="javascript:void(0);" onclick="sign_out()" id="logout_submit" class="btn btn-default btn-flat">Sign out</a>
+            </div>
+        </li>
+    </ul>
+</li>
+{% endblock %} {% block user-panel %}
+<!-- TODO 关于用户左侧头像 和右侧信息（包含标记个人信息， 登陆按钮）归入 _bsae.html中？？ -->
+<div class="pull-left image">
+    <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+</div>
+<div class="pull-left info">
+    <p> {{ user.username }} </p>
+    <!--     <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+ --><a href="#"><i class="fa fa-circle text-success"></i> {{ system_info }}</a>
+</div>
+{% endblock %} {% block slide %}
+<!-- <ul class="sidebar-menu">
+        <li class="header">操作</li>
+                <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                        </ul>
+        </li>
+  </ul> -->
+<ul class="sidebar-menu">
+    <li class="header">操作选项</li>
+    <li class="active treeview">
+        <a href="{% url 'show_group' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置权限组</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="{% url 'show_academy' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置院系信息</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="{% url 'show_speciality' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置专业信息</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="{% url 'show_admin' %}">
+            <!--   <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置管理员</span>
+        </a>
+    </li>
+    </li>
+</ul>
+{% endblock %} {% block content-header %}
+<h1>
+      配置
+            <small> 权限组 </small>
+</h1>
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+    <li class="active"> 配置权限组合 </li>
+</ol>
+{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">数据表</h3>&nbsp; &nbsp; &nbsp;
+                <a href="#"> <span class="glyphicon glyphicon-plus" aria-hidden="true" data-toggle="modal" data-target="#addModal">
+                             </span> </a>
+            </div>
+            <div class="box-body">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>权限组ID</th>
+                            <th>权限组名称</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in group_all %}
+                        <tr data-target="{{ item.id }}">
+                            <td name="id"> {{ item.id }}</td>
+                            <td name='name'> {{ item.name }}</td>
+                            <!-- TODO 编辑icon 不采用button -->
+                            <td>
+                                <a href="#"> <span class="link_edit glyphicon glyphicon-wrench" aria-hidden="true"></span> </a>
+                                <a href="#"> <span class="link_delete glyphicon glyphicon-remove" aria-hidden="true" data-toggle="modal" data-target="#deleteModal">
+                                </span> </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!--  <div class='row'>
+                    <div class="col-sm-12">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                            <ul class="pagination">
+                                <li class="paginate_button previous disabled" id="example2_previous"><a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a></li>
+                                <li class="paginate_button active"><a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">2</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="3" tabindex="0">3</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="4" tabindex="0">4</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="5" tabindex="0">5</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="6" tabindex="0">6</a></li>
+                                <li class="paginate_button next" id="example2_next"><a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0">Next</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div> -->
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+<!-- addModal -->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">新增权限组</h4>
+            </div>
+            <div class="modal-body">
+                <form id='add-form' method='post' enctype="multipart/form-data" class="form-horizontal">
+                    <!-- TODO input居中显示在modal -->
+                    {% csrf_token %}
+                    <div class="form-group has-feedback">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" placeholder="权限组名称 长度限制80" id='name'>
+                            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id='btn_add_submit'>提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">删除权限组</h4>
+            </div>
+            <div class="modal-body">
+               
+                  
+                <form method='post' enctype="multipart/form-data" class="form-horizontal">
+                    {% csrf_token %}
+                    <input type="hidden" id='id_delete'>
+
+                    <div class="form-group has-feedback">
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id='name_delete' disabled>
+                            <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                        </div>
+                    </div>
+
+                </form>
+    
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id='btn_add_submit' >确定</button>
+            </div>
+        </div>
+    </div>
+</div>
+ -->
+<!--  delete modal -->
+<div class="modal fade bs-example-modal-sm1" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">你确认删除么？</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id='btn_delete_submit'>确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+function check_input() {
+
+    var name = $('#username').val();
+
+    if (name == '') {
+        alert('权限组名称不能为空');
+        return false;
+    }
+
+    // TODO 判断长度 <＝ 80
+    return true;
+}
+
+function create_group() {
+    var name = $('#name').val();
+
+    $.post('/account/content/create_group/', {
+        name: name,
+        csrfmiddlewaretoken: $.cookie('csrftoken')
+    }, function(data) {
+        if (data.status) {
+
+            // TOOD 成功后跳转
+            alert(data.msg);
+            window.location.reload();
+
+        } else {
+            alert(data.msg)
+        }
+    });
+}
+
+function sign_out(){
+
+    $.post('/account/content/logout/', {csrfmiddlewaretoken: $.cookie('csrftoken')}, function(data){
+    
+        if(data.status){
+        
+          alert(data.msg);
+          var full_url = "/account/login/";
+          window.location.href = full_url;
+            
+        }else{
+          alert(data.msg)
+            
+        }   
+    });
+}
+
+$(document).ready(function() {
+
+
+    // TODO  提交按钮默认为 disabled 当检查到 input满足条件时， 取消disbaled
+
+    // $('#add-form').on('change', function(){
+
+    //     if(check_input()){
+    //         $('#btn_add_submit').removeAttr('disabled');
+    //     }
+
+    // });
+
+
+    $('#btn_add_submit').on('click', function() {
+
+
+        // TODO 判断form是否填写满足要求
+
+        if (!check_input()) {
+            return false;
+        } else {
+            create_group();
+            return false;
+        }
+    });
+
+
+    $('#deleteModal').on('show.bs.modal', function(event) {
+        // do something...
+
+
+        var $button = $(event.relatedTarget);
+
+        var $tr = $button.parents('tr');
+
+        var group_id = $tr.data('target');
+
+        // $('#btn_delete_submit').on('click', function(){
+
+
+
+        // });
+
+        $('#btn_delete_submit').on('click', function() {
+
+            $.post('/account/content/delete_group/', {
+                group: group_id,
+                csrfmiddlewaretoken: $.cookie('csrftoken')
+            }, function(data) {
+
+                if (data.status) {
+                    window.location.reload();
+                } else {
+                    alert(data.msg)
+                }
+
+            });
+
+        });
+
+    });
+
+
+});
+</script>
+{% endblock %}

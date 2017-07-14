@@ -1,0 +1,227 @@
+{% extends '_base.html' %} {% block css %} {% endblock %} {% block user_account %}
+<li class="dropdown user user-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <img src="/media/avatar/default.jpg" class="user-image" alt="User Image">
+        <span class="hidden-xs"> {{ student.name }}</span>
+    </a>
+    <ul class="dropdown-menu">
+        <!-- User image -->
+        <li class="user-header">
+            <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+            <p>
+                {{ user.username }}
+                <!-- TODO 换行  -->
+                <small> {{ system_info }} 学生</small>
+            </p>
+        </li>
+        <!-- Menu Footer-->
+        <li class="user-footer">
+            <div class="pull-left">
+                <a href="/account/perfect_student/" class="btn btn-default btn-flat">Profile</a>
+            </div>
+            <div class="pull-right">
+                <a href="javascript:void(0);" onclick="sign_out()" id="logout_submit" class="btn btn-default btn-flat">Sign out</a>
+            </div>
+        </li>
+    </ul>
+</li>
+{% endblock %} {% block user-panel %}
+<!-- TODO 关于用户左侧头像 和右侧信息（包含标记个人信息， 登陆按钮）归入 _bsae.html中？？ -->
+<div class="pull-left image">
+    <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+</div>
+<div class="pull-left info">
+    <p> {{ student.name }}</p>
+    <!-- TODO 换行  -->
+    <a href="#"><i class="fa fa-circle text-success"></i> {{ system_info }}学生</a>
+</div>
+{% endblock %} {% block slide %}
+<!-- <ul class="sidebar-menu">
+        <li class="header">操作</li>
+                <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                        </ul>
+        </li>
+  </ul> -->
+<ul class="sidebar-menu">
+    <li class="header">操作选项</li>
+    <li class="treeview">
+        <a href="{% url 'show_thesis_single' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 论文选题</span>
+        </a>
+    </li>
+    <li class="active treeview">
+        <a href="{% url 'show_papersection_single' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 选题结果</span>
+        </a>
+    </li>
+</ul>
+{% endblock %} {% block content-header %}
+<h1>
+      选题
+            <small> 结果 </small>
+</h1>
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+    <li class="active"> 选题结果 </li>
+</ol>
+{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">数据表</h3>
+            </div>
+            <div class="box-body">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                           <!--  <th>论文ID</th> -->
+                            <th>论文题目</th>
+                          <!--   <th>论文要求</th> -->
+                            <th>辅导老师</th>
+                            <th>所属学院</th>
+                            <th>论文状态</th>
+                            <th>选中时间</th>
+
+
+                         <!--    <th>选题开始时间</th>
+                            <th>选题结束时间</th> -->
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                        <tr data-target="{{ paper.id }}">
+                           <!--  <td>{{ item.id }}</td> -->
+                            <td name='title'>{{ paper.thesis.title }}</td>
+                            <td name='content' style="display: none;">{{ paper.thesis.content }}</td>
+                            <td name="instructor">{{ paper.thesis.instructor.name }}</td>
+                            <td name="academy">{{ paper.thesis.academy.name }}</td>
+                            <td name="status"> {{ paper.thesis.status.1 }}</td>
+                            <td name="create_time">{{ paper.create_time|date:"Y-m-d H:m:s" }}</td>
+                          <!--   <td>{{ item.start_time|date:"Y-m-d H:m:s" }}</td>
+                            <td>{{ item.end_time|date:"Y-m-d H:m:s" }}</td>
+                         -->
+                            <td name="operate">
+
+                                <a href="#"> <span class="link_edit glyphicon glyphicon-search" aria-hidden="true" data-toggle="modal" data-target="#infoModal"></span> </a>
+                            </td>
+                        </tr>
+                       
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+
+
+
+
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                
+                <!-- 题目 -->
+                  <h4 class="modal-title" id="thesis_tiele"> </h4>
+            </div>
+            <div class="modal-body">
+             <!-- 学院 -->
+            <h4 id="thesis_academy" style="text-align: right;"> </h4>
+            <!-- 导师 -->
+                <h4 id="thesis_instructor" style="text-align: right;"> </h4>
+            <!-- 论文要求 -->
+                <p id="thesis_content"> </p>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+               <!--  <button type="button" class="btn btn-danger" id='btn_delete_submit'>确认</button> -->
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+function sign_out(){
+
+    $.post('/account/content/logout/', {csrfmiddlewaretoken: $.cookie('csrftoken')}, function(data){
+    
+        if(data.status){
+        
+          alert(data.msg);
+          var full_url = "/account/login/";
+          window.location.href = full_url;
+            
+        }else{
+          alert(data.msg)
+            
+        }   
+    });
+}
+
+$(document).ready(function() {
+
+    $('#infoModal').on('shown.bs.modal', function (event) {
+        // do something...
+        var $button = $(event.relatedTarget);
+
+        var $tr = $button.parents('tr');
+
+        var paper_id = $tr.data('target');
+
+        var paper_title = $tr.children("td[name='title']").text();
+
+        var paper_instructor = $tr.children("td[name='instructor']").text();
+
+        var paper_content = $tr.children("td[name='content']").text();
+
+        var paper_academy = $tr.children("td[name='academy']").text();
+
+
+        var modal = $(this);
+
+        modal.find('#thesis_tiele').text(paper_title);
+
+        modal.find('#thesis_instructor').text("辅导老师：  " + paper_instructor);
+
+        modal.find('#thesis_content').text(paper_content);
+
+        modal.find('#thesis_academy').text(paper_academy);
+
+
+
+
+    });
+
+    $('#infoModal').on('hidden.bs.modal', function (e) {
+        // do something...
+        var modal = $(this);
+
+        $("#thesis_tiele").empty();
+        $("#thesis_instructor").empty();
+        $("#thesis_content").empty();
+        $("#thesis_academy").empty();
+
+
+    });
+
+    
+
+});
+</script>
+{% endblock %}

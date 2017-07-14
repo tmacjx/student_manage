@@ -1,0 +1,460 @@
+{% extends '_base.html' %} {% block css %} {% endblock %} {% block user_account %}
+<li class="dropdown user user-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <img src="/media/avatar/default.jpg" class="user-image" alt="User Image">
+        <span class="hidden-xs"> {{ instructor.name }}</span>
+    </a>
+    <ul class="dropdown-menu">
+        <!-- User image -->
+        <li class="user-header">
+            <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+            <p>
+                {{ user.username }}
+                <!-- TODO 换行  -->
+                <small> {{ system_info }} 教师</small>
+            </p>
+        </li>
+        <!-- Menu Footer-->
+        <li class="user-footer">
+            <div class="pull-left">
+                <a href="/account/perfect_instructor/" class="btn btn-default btn-flat">Profile</a>
+            </div>
+            <div class="pull-right">
+               <a href="javascript:void(0);" onclick="sign_out()" id="logout_submit" class="btn btn-default btn-flat">Sign out</a>
+            </div>
+        </li>
+    </ul>
+</li>
+{% endblock %} {% block user-panel %}
+<!-- TODO 关于用户左侧头像 和右侧信息（包含标记个人信息， 登陆按钮）归入 _bsae.html中？？ -->
+<div class="pull-left image">
+    <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+</div>
+<div class="pull-left info">
+    <p> {{ instructor.name }}</p>
+    <!-- TODO 换行  -->
+    <a href="#"><i class="fa fa-circle text-success"></i> {{ system_info }}教师</a>
+</div>
+{% endblock %} {% block slide %}
+<!-- <ul class="sidebar-menu">
+        <li class="header">操作</li>
+                <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                        </ul>
+        </li>
+  </ul> -->
+<ul class="sidebar-menu">
+    <li class="header">操作选项</li>
+    <li class="active treeview">
+        <a href="{% url 'show_thesis_self' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置论文选题</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="{% url 'show_papersection_self' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span>  查看选题结果</span>
+        </a>
+    </li>
+
+    <li class="treeview">
+        <a href="">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span>  查看上传作品</span>
+        </a>
+    </li>
+    
+
+
+
+
+</ul>
+{% endblock %} {% block content-header %}
+<h1>
+      配置
+            <small> 选题 </small>
+</h1>
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+    <li class="active"> 配置论文选题 </li>
+</ol>
+{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">数据表</h3>&nbsp; &nbsp; &nbsp;
+                <a href="#"> <span class="glyphicon glyphicon-plus" aria-hidden="true" data-toggle="modal" data-target="#addModal">
+                             </span> </a>
+            </div>
+            <div class="box-body">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>论文ID</th>
+                            <th>论文题目</th>
+                            <!-- <th>论文要求</th> -->
+                            <th>辅导老师</th>
+                            <th>所属学院</th>
+                            <th>论文状态</th>
+                            <th>选题开始时间</th>
+                            <th>选题结束时间</th>
+                            <th>编辑</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in thesis_all %}
+                        <tr data-target="{{ item.id }}">
+                            <td>{{ item.id }}</td>
+                            <td name="title">{{ item.title }}</td>
+                            <td name="content" style="display: none;">{{ item.content }}</td>
+                            <td name="instructor">{{ item.instructor.name }}</td>
+                            <td name="academy">{{ item.academy.name }}</td>
+                            <td>{{ item.status.1 }}</td>
+                            <td>{{ item.start_time|date:"Y-m-d H:m:s" }}</td>
+                            <td>{{ item.end_time|date:"Y-m-d H:m:s" }}</td>
+                        
+                            <td>
+                                <a href="#" id="btn_submit"> <span class="link_edit glyphicon glyphicon-search" aria-hidden="true" data-toggle="modal" data-target="#infoModal"></span> </a>
+                                <a href="#"> <span class="link_edit glyphicon glyphicon-wrench" aria-hidden="true"></span> </a>
+                                <a href="#"> <span class="link_delete glyphicon glyphicon-remove" aria-hidden="true" data-toggle="modal" data-target="#deleteModal">
+                                </span> </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <!--   <h4 class="modal-title" id="myModalLabel">新增管理员</h4> -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">填写资料</a></li>
+                </ul>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <form id='add-form' method='post' enctype="multipart/form-data" class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 论文题目 </label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id='title'>
+                                    <span class="glyphicon glyphicon-tags form-control-feedback"></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 论文要求 </label>
+                                <div class="col-sm-5">
+                                     <textarea class="form-control" rows="4" id='content'>
+                                     </textarea>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 辅导老师 </label>
+                                <div class="col-sm-5">
+                                    <select class="form-control" id='instructor'>
+                                        <option value="{{ instructor.id }}"> {{ instructor.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 所属学院 </label>
+                                <div class="col-sm-5">
+                                     <select class="form-control" id='academy'>
+                                        <option value="{{ instructor.academy.id }}"> {{ instructor.academy.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 论文状态 </label>
+                                <div class="col-sm-5">
+                                      <select class="form-control" id='status'>
+                                        {% for item in status_all %}
+                                            <option value="{{ item.0 }}"> {{ item.1 }}</option>
+                                        {% endfor %}
+                                      </select>
+                                </div>
+                            </div>
+                                
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 选题开始时间 </label>
+                                <div class="col-sm-5">
+                                    <input type='text' id='start_time' class='form-control Wdate' onFocus="WdatePicker({lang: 'zh-cn', dateFmt:'yyyy-MM-dd HH:mm:ss'})">  </input>
+                                    
+                                </div>
+                            </div>
+
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 选题结束时间 </label>
+                                <div class="col-sm-5">
+                                    <input type='text' id='end_time' class='form-control Wdate' onFocus="WdatePicker({lang: 'zh-cn', dateFmt:'yyyy-MM-dd HH:mm:ss'})">  </input>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id='btn_add_submit'>提交</button>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--  delete modal -->
+<div class="modal fade bs-example-modal-sm1" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">你确认删除么？</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id='btn_delete_submit'>确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                
+                <!-- 题目 -->
+                  <h4 class="modal-title" id="thesis_tiele"> </h4>
+            </div>
+            <div class="modal-body">
+            <!-- 学院 -->
+            <h4 id="thesis_academy" style="text-align: right;"> </h4>
+            <!-- 导师 -->
+                <h4 id="thesis_instructor" style="text-align: right;"> </h4>
+            <!-- 论文要求 -->
+                <p id="thesis_content"> </p>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+               <!--  <button type="button" class="btn btn-danger" id='btn_delete_submit'>确认</button> -->
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+
+function check_input(){
+    if(!Fn.hasVal("#title")){
+        alert("论文题目不能为空");
+        return false;
+    }
+
+    if(!Fn.hasVal("#content")){
+        alert("论文要求不能为空");
+        return false;
+    }
+
+    if(!Fn.hasVal("#instructor")){
+        alert("辅导老师不能为空");
+        return false;
+    }
+
+    if(!Fn.hasVal("#academy")){
+        alert("所属学院不能为空");
+        return false;
+    }
+
+    if(!Fn.hasVal("#status")){
+        alert("论文状态不能为空");
+        return false;
+    }
+
+    if(!Fn.hasVal("#start_time")){
+        alert("选题开始时间不能为空");
+        return false;
+    }
+
+    if(!Fn.hasVal("#end_time")){
+        alert("选题结束时间");
+        return false;
+    }
+
+    // TODO start_time end_time应该进行比较
+    return true;
+
+}
+
+function create_thesis() {
+
+    var title = $("#title").val();
+
+    var content = $("#content").val();
+
+    var instructor = $("#instructor").val();
+
+    var academy = $("#academy").val();
+
+    var status = $("#status").val();
+
+    var start_time = $("#start_time").val();
+
+    var end_time= $("#end_time").val();
+
+
+
+    $.post('/account/content/create_thesis/', {
+        title: title,
+        content: content,
+        instructor: instructor,
+        academy: academy,
+        status: status,
+        start_time: start_time,
+        end_time: end_time,
+        csrfmiddlewaretoken: $.cookie('csrftoken')
+    }, function(data) {
+
+        if (data.status) {
+
+            alert("操作成功");
+            window.location.reload();
+
+        } else {
+            alert(data.msg)
+            window.location.reload();
+        }
+    });
+}
+
+function sign_out(){
+
+    $.post('/account/content/logout/', {csrfmiddlewaretoken: $.cookie('csrftoken')}, function(data){
+    
+        if(data.status){
+        
+          alert(data.msg);
+          var full_url = "/account/login/";
+          window.location.href = full_url;
+            
+        }else{
+          alert(data.msg)
+            
+        }   
+    });
+}
+$(document).ready(function() {
+
+
+    // TODO  提交按钮默认为 disabled 当检查到 input满足条件时， 取消disbaled
+
+    $('#btn_add_submit').on('click', function() {
+
+
+        // TODO 判断form是否填写满足要求
+
+        if (!check_input()) {
+            return false;
+        } else {
+            create_thesis();
+            return false;
+        }
+    });
+
+    $('#deleteModal').on('show.bs.modal', function(event) {
+        // do something...
+
+
+        var $button = $(event.relatedTarget);
+
+        var $tr = $button.parents('tr');
+
+        var thesis_id = $tr.data('target');
+
+        $('#btn_delete_submit').on('click', function() {
+
+            $.post('/account/content/delete_thesis/', {
+                thesis: thesis_id,
+                csrfmiddlewaretoken: $.cookie('csrftoken')
+            }, function(data) {
+
+                if (data.status) {
+                    window.location.reload();
+                } else {
+                    alert(data.msg);
+                }
+
+            });
+        });
+    });
+
+
+
+    $('#infoModal').on('shown.bs.modal', function (event) {
+        // do something...
+        var $button = $(event.relatedTarget);
+
+        var $tr = $button.parents('tr');
+
+        var thesis_id = $tr.data('target');
+
+        var thesis_title = $tr.children("td[name='title']").text();
+
+        var thesis_instructor = $tr.children("td[name='instructor']").text();
+
+        var thesis_content = $tr.children("td[name='content']").text();
+
+        var thesis_academy = $tr.children("td[name='academy']").text();
+
+
+        var modal = $(this);
+
+        modal.find('#thesis_tiele').text(thesis_title);
+
+        modal.find('#thesis_instructor').text("辅导老师：  " + thesis_instructor);
+
+        modal.find('#thesis_content').text(thesis_content);
+
+        modal.find('#thesis_academy').text(thesis_academy);
+
+
+
+    });
+
+    $('#infoModal').on('hidden.bs.modal', function (e) {
+        // do something...
+        var modal = $(this);
+
+        $("#thesis_tiele").empty();
+        $("#thesis_instructor").empty();
+        $("#thesis_content").empty();
+        $("#thesis_academy").empty();
+
+
+    });
+
+});
+</script>
+{% endblock %}

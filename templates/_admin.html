@@ -1,0 +1,106 @@
+{% extends '_base.html' %}
+
+
+{% block css %}
+
+{% endblock %}
+
+
+{% block user-panel %}
+
+<!-- TODO 关于用户左侧头像 和右侧信息（包含标记个人信息， 登陆按钮）归入 _bsae.html中？？ -->
+<div class="pull-left image">
+         <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+</div>
+                   
+ <div class="pull-left info">
+        <p>Alexander Pierce</p>
+        <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+</div>
+
+ {% endblock %}
+
+
+  {% block slide %}
+             
+ <!-- <ul class="sidebar-menu">
+        <li class="header">操作</li>
+                <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                        </ul>
+        </li>
+  </ul> -->
+<ul class="sidebar-menu">
+        <li class="header">操作选项</li>
+				<li class="active treeview">
+                		<a href="#">
+                            <i class="fa fa-edit"></i>  <span> 配置老师帐号</span>
+                        </a>
+                                             
+                </li>
+                <li class="active treeview">
+                		<a href="#">
+                            <i class="fa fa-edit"></i>  <span> 配置学生帐号</span>
+                        </a>
+                                             
+                </li>
+				<li class="active treeview">
+                		<a href="#">
+                            <i class="fa fa-edit"></i>  <span> 配置选题</span>
+                        </a>
+                                             
+                </li>
+                <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-table"></i>  <span> 查看选题记录</span>
+                        </a>
+                                             
+                </li>
+
+
+
+				
+
+        </li>
+  </ul>
+
+
+
+
+
+
+  {% endblock %}
+
+{% block content-header %}
+{% endblock %}
+
+
+{% block content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
+
+
+{% endblock %}
+
+
+ 

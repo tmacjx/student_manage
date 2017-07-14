@@ -1,6 +1,6 @@
 # coding=utf-8
 from django.contrib.auth.models import User
-from core.models import Student, Instructor, Admin
+from core.models import Student, Instructor, Admin, SuperAdmin
 
 
 def get_user_student(user):
@@ -9,7 +9,8 @@ def get_user_student(user):
     # TODO 自定义异常类型
     except Exception, e:
         return None
-    return student
+    else:
+        return student
 
 
 def get_user_instructor(user):
@@ -17,7 +18,8 @@ def get_user_instructor(user):
         instructor = Instructor.objects.get(user=user)
     except Exception, e:
         return None
-    return instructor
+    else:
+        return instructor
 
 
 def get_user_admin(user):
@@ -25,7 +27,8 @@ def get_user_admin(user):
         admin = Admin.objects.get(user=user)
     except Exception, e:
         return None
-    return admin
+    else:
+        return admin
 
 
 def check_user(user):
@@ -39,28 +42,42 @@ def check_user(user):
 
 
 def is_student(user):
-    if Student.objects.exists(user=user):
+    if Student.objects.filter(user=user).exists():
         return True
     else:
         return False
 
 
 def is_admin(user):
-    if Admin.objects.exists(user=user):
+    if Admin.objects.filter(user=user).exists():
         return True
     else:
         return False
 
 
 def is_instructor(user):
-    if Instructor.objects.exists(user=user):
+    if Instructor.objects.filter(user=user).exists():
         return True
     else:
         return False
 
 
 def is_super_admin(user):
-    if user.is_superuser:
+    if SuperAdmin.objects.filter(user=user).exists():
         return True
     else:
         return False
+
+
+def get_user_by_email(email):
+    # if User.objects.filter(email=email).exists():
+    #     return True
+    # else:
+    #     return False
+    try:
+        user = User.objects.get(email=email)
+    except Exception as e:
+        return None
+    else:
+        return user
+

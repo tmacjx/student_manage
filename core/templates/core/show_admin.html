@@ -1,0 +1,513 @@
+{% extends '_base.html' %} {% block css %} {% endblock %} {% block user_account %}
+<li class="dropdown user user-menu">
+    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+        <img src="/media/avatar/default.jpg" class="user-image" alt="User Image">
+        <span class="hidden-xs"> {{ user.username }} </span>
+    </a>
+    <ul class="dropdown-menu">
+        <!-- User image -->
+        <li class="user-header">
+            <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+            <p>
+               {{ user.username }}
+                <small> {{ system_info }} </small>
+            </p>
+        </li>
+        <!-- Menu Footer-->
+        <li class="user-footer">
+            <div class="pull-left">
+                <a href="/account/perfect_admin/" class="btn btn-default btn-flat">Profile</a>
+            </div>
+            <div class="pull-right">   
+               <a href="javascript:void(0);" onclick="sign_out()" id="logout_submit" class="btn btn-default btn-flat">Sign out</a>
+            </div>
+        </li>
+    </ul>
+</li>
+{% endblock %} {% block user-panel %}
+<!-- TODO 关于用户左侧头像 和右侧信息（包含标记个人信息， 登陆按钮）归入 _bsae.html中？？ -->
+<div class="pull-left image">
+    <img src="/media/avatar/default.jpg" class="img-circle" alt="User Image">
+</div>
+<div class="pull-left info">
+    <p> {{ user.username }}</p>
+    <!--  <a href="#"><i class="fa fa-circle text-success"></i> Online</a> -->
+    <a href="#"><i class="fa fa-circle text-success"></i> {{ system_info }}</a>
+</div>
+{% endblock %} {% block slide %}
+<!-- <ul class="sidebar-menu">
+        <li class="header">操作</li>
+                <li class="active treeview">
+                        <a href="#">
+                            <i class="fa fa-dashboard"></i> <span>Dashboard</span> <i class="fa fa-angle-left pull-right"></i>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="active"><a href="index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                            <li><a href="index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                        </ul>
+        </li>
+  </ul> -->
+<ul class="sidebar-menu">
+    <li class="header">操作选项</li>
+    <li class="treeview">
+        <a href="{% url 'show_group' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置权限组</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="{% url 'show_academy' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置院系信息</span>
+        </a>
+    </li>
+    <li class="treeview">
+        <a href="{% url 'show_speciality' %}">
+            <!-- <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置专业信息</span>
+        </a>
+    </li>
+    <li class="active treeview">
+        <a href="{% url 'show_admin' %}">
+            <!--   <a href="#"> -->
+            <i class="fa fa-edit"></i> <span> 配置管理员</span>
+        </a>
+    </li>
+    </li>
+</ul>
+{% endblock %} {% block content-header %}
+<h1>
+      配置
+            <small> 管理员 </small>
+</h1>
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> 主页</a></li>
+    <li class="active"> 配置管理员 </li>
+</ol>
+{% endblock %} {% block content %}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">数据表</h3>&nbsp; &nbsp; &nbsp;
+                <a href="#"> <span class="glyphicon glyphicon-plus" aria-hidden="true" data-toggle="modal" data-target="#addModal">
+                             </span> </a>
+            </div>
+            <div class="box-body">
+                <table id="example2" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>管理员ID</th>
+                            <th>管理员名称</th>
+                            <th>所在学院</th>
+                            <th>手机号</th>
+                            <th>编辑</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in admin_all %}
+                        <tr data-target="{{ item.id }}">
+                            <td>{{ item.user.username }}</td>
+                            <td>{{ item.index }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.academy.name }}</td>
+                            <td>{{ item.cellphone }}</td>
+                            <!-- TODO 是否显示头像， 是否需要后台生成缩略图？-->
+                            <!--                             <td></td>
+ -->
+                            <!-- TODO 编辑icon 不采用button -->
+                            <td>
+                                <a href="#"> <span class="link_edit glyphicon glyphicon-wrench" aria-hidden="true"></span> </a>
+                                <a href="#"> <span class="link_delete glyphicon glyphicon-remove" aria-hidden="true" data-toggle="modal" data-target="#deleteModal">
+                                </span> </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class='row'>
+                    <div class="col-sm-12">
+                        <div class="dataTables_paginate paging_simple_numbers" id="example2_paginate">
+                            <ul class="pagination">
+                                <li class="paginate_button previous disabled" id="example2_previous"><a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0">Previous</a></li>
+                                <li class="paginate_button active"><a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0">1</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0">2</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="3" tabindex="0">3</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="4" tabindex="0">4</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="5" tabindex="0">5</a></li>
+                                <li class="paginate_button "><a href="#" aria-controls="example2" data-dt-idx="6" tabindex="0">6</a></li>
+                                <li class="paginate_button next" id="example2_next"><a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0">Next</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+</div>
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <!--   <h4 class="modal-title" id="myModalLabel">新增管理员</h4> -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">注册</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">完善资料</a></li>
+                </ul>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="home">
+                        <form id='add-form' method='post' enctype="multipart/form-data" class="form-horizontal">
+                            {% csrf_token %}
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 用户名 </label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id='username'>
+                                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 密码 </label>
+                                <div class="col-sm-5">
+                                    <input type="password" class="form-control" id='password1'>
+                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                    <p class="help-block">密码长度>=8, 且不能为全数字</p>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 确认密码 </label>
+                                <div class="col-sm-5">
+                                    <input type="password" class="form-control" id='password2'>
+                                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 邮箱 </label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id='email'>
+                                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id='btn_add_submit'>提交</button>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="profile">
+                        <form id='profile-form' method='post' enctype="multipart/form-data" class="form-horizontal">
+                            {% csrf_token %}
+                            <input id='user' type="hidden"> </input>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 管理员ID </label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id='index'>
+                                    <span class="form-control-feedback"></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 姓名 </label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id='name'>
+                                    <span class="form-control-feedback"></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 头像 </label>
+                                <div class="col-sm-5">
+                                    <input type="file" class="form-control" id="image">
+                                    <p class="help-block">图片大小请保持在2M以内，支持jpg、jpeg、png格式</p>
+                                    <span class="form-control-feedback"></span>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 学院 </label>
+                                <div class="col-sm-5">
+                                    <select class="form-control" id='academy'>
+                                        {% for item in academy_all %}
+                                        <option value='{{ item.id }}'> {{ item.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group has-feedback">
+                                <label class="col-sm-4 control-label"> 手机号 </label>
+                                <div class="col-sm-5">
+                                    <input type="text" class="form-control" id='cellphone'>
+                                    <span class="form-control-feedback"></span>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                <button type="button" class="btn btn-primary" id='btn_profile_submit'>提交</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  delete modal -->
+<div class="modal fade bs-example-modal-sm1" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">你确认删除么？</h4>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-danger" id='btn_delete_submit'>确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+
+var image_value = "";
+function check_register() {
+
+    if (!Fn.hasVal("#username")) {
+        alert("用户名不能为空");
+        return false;
+    }
+
+    if (!Fn.hasVal("#password1")) {
+        alert("密码不能为空");
+        return false;
+    }
+
+    if (!Fn.hasVal("#password2")) {
+        alert("确认密码不能为空");
+        return false;
+    }
+
+
+    if (!Fn.isEqual("#password1", "#password2")) {
+        alert("两次输入密码不一致");
+        return false;
+    }
+
+    if (!Fn.hasVal("#email")) {
+        alert("邮箱不能为空");
+        return false;
+    }
+
+    if (!Fn.isEmail("#email")) {
+        alert("邮箱格式不正确");
+        return false;
+    }
+    return true;
+}
+
+function check_profile() {
+    if (!Fn.hasVal("#user")) {
+        alert("请先完成注册");
+        return false;
+    }
+
+    if (!Fn.hasVal("#index")) {
+        alert("管理员ID不能为空");
+        return false;
+    }
+
+
+    if (!Fn.isNumber("#index")) {
+        alert("管理员ID必须为数字");
+        return false;
+    }
+
+    if (!Fn.hasVal("#name")) {
+        alert("姓名不能为空");
+        return false;
+    }
+
+    if (!Fn.hasVal("#academy")) {
+        alert("学院不能为空");
+        return false;
+    }
+
+    if (Fn.hasVal("#cellphone") && !Fn.isPhone("#cellphone")) {
+        alert("手机号格式不正确");
+        return false;
+    }
+    return true;
+}
+
+function create_admin() {
+    var username = $('#username').val();
+
+    var password1 = $('#password1').val();
+
+    var password2 = $('#password2').val();
+
+    var email = $('#email').val();
+
+    $.post('/account/content/create_user/', {
+        username: username,
+        password1: password1,
+        password2: password2,
+        email: email,
+        csrfmiddlewaretoken: $.cookie('csrftoken')
+    }, function(data) {
+        if (data.status) {
+            // TOOD 成功后跳转
+            alert(data.msg);
+            var user = data.data['user'];
+            $("#user").val(user);
+
+        } else {
+            alert(data.msg)
+        }
+    });
+
+}
+
+function create_profiel() {
+    // var user = $("#user").val();
+
+    var index = $("#index").val();
+
+    var name = $("#name").val();
+
+    var academy = $("#academy").val();
+
+    var cellphone = $("#cellphone").val();
+
+    var image = image_value;
+
+    // console.log(image);
+
+
+    $.post('/account/content/create_admin/', {
+        user: user,
+        index: index,
+        name: name,
+        academy: academy,
+        image: image,
+        cellphone: cellphone,
+        csrfmiddlewaretoken: $.cookie('csrftoken')
+    }, function(data) {
+
+        if (data.status) {
+
+            alert("操作成功");
+            window.location.reload();
+
+        } else {
+            alert(data.msg)
+
+        }
+
+
+    });
+}
+
+function sign_out(){
+
+    $.post('/account/content/logout/', {csrfmiddlewaretoken: $.cookie('csrftoken')}, function(data){
+    
+        if(data.status){
+        
+          alert(data.msg);
+          var full_url = "/account/login/";
+          window.location.href = full_url;
+            
+        }else{
+          alert(data.msg)
+            
+        }   
+    });
+}
+
+$(document).ready(function() {
+
+
+
+    // TODO  提交按钮默认为 disabled 当检查到 input满足条件时， 取消disbaled
+
+    $('#btn_add_submit').on('click', function() {
+
+
+        // TODO 判断form是否填写满足要求
+
+        if (!check_register()) {
+            return false;
+        } else {
+            create_admin();
+            return false;
+        }
+    });
+
+
+    $("#image").change(function(){
+
+
+        var file = this.files[0];
+        //这里我们判断下类型如果不是图片就返回 去掉就可以上传任意文件 
+        if(!/image\/\w+/.test(file.type)){ 
+                alert("请确保文件为图像类型");
+                return false;
+        }
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(e){
+                // result.innerHTML = '<img src="'+this.result+'" alt=""/>';
+                // img_area.innerHTML = '<div class="sitetip">图片img标签展示：</div><img src="'+this.result+'" alt=""/>';
+                console.log(this.result);
+                image_value = this.result;
+        }
+
+    });
+
+
+    $('#btn_profile_submit').on('click', function() {
+
+        if (!check_profile()) {
+            return false;
+        } else {
+            create_profiel();
+            return false;
+        }
+    });
+
+
+    $('#deleteModal').on('show.bs.modal', function(event) {
+        // do something...
+
+
+        var $button = $(event.relatedTarget);
+
+        var $tr = $button.parents('tr');
+
+        var admin_id = $tr.data('target');
+
+        $('#btn_delete_submit').on('click', function() {
+
+            $.post('/account/content/delete_admin/', {
+                admin: admin_id,
+                csrfmiddlewaretoken: $.cookie('csrftoken')
+            }, function(data) {
+
+                if (data.status) {
+                    window.location.reload();
+                } else {
+                    alert(data.msg);
+                }
+
+            });
+        });
+    });
+
+});
+</script>
+{% endblock %}

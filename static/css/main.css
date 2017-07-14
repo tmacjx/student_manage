@@ -1,0 +1,14 @@
+.form-group label{
+    text-align: left !important;
+}
+
+.perfect-info {
+    width: 430px;
+    text-align: center;
+    display: block;
+    margin: 0 auto;
+}
+
+.chesis-instructor {
+    text-align: right !important;
+}

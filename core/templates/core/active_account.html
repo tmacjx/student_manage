@@ -1,0 +1,28 @@
+{% extends '_account_base.html' %} {% block title %} 管理后台 | 登录 {% endblock %} {% block content-title %}
+<div class="login-box">
+    <div class="login-logo">
+        <h2>本科生毕业设计管理系统 </h2>
+    </div>
+    <!-- /.login-logo -->
+    {% endblock %} {% block content %}
+    <div class="login-box-body">
+        <p class="login-box-msg">欢迎使用</p>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group has-feedback">
+                <p style="text-align: center; color: green">{{ user.username }}</p> 
+                <small> ,你已经成功激活</small> 
+                <a href="/account/login/"><i class="fa fa-circle text-success"></i> 点击链接，进入登录页面</a>
+            </div>
+        </form>
+        <br>
+    </div>
+    <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+$(document).ready(function() {
+});
+</script>
+{% endblock %}

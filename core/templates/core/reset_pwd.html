@@ -1,0 +1,96 @@
+{% extends '_account_base.html' %} {% block title %} 管理后台 | 重置密码 {% endblock %} {% block content-title %}
+<div class="login-box">
+    <div class="login-logo">
+        <h2>本科生毕业设计管理系统 </h2>
+    </div>
+    {% endblock %} {% block content %}
+    <div class="login-box-body">
+        <p class="login-box-msg">重置密码</p>
+        <form action="" method="post">
+            {% csrf_token %}
+            <!--  <div class="form-group has-feedback">
+                <input type="text" class="form-control" placeholder="用户名" id='username'>
+                <span class="glyphicon glyphicon-user form-control-feedback"></span>
+            </div> -->
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" placeholder="密码" id='new_password1'>
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" class="form-control" placeholder="确认密码" id='new_password2'>
+                <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat" id='btn_submit'>修改</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} {% block javascript %}
+<script type="text/javascript">
+function check_input() {
+
+    if (!Fn.hasVal("#new_password1")) {
+        alert("密码不能为空");
+        return false;
+    }
+
+    if (!Fn.hasVal("#new_password2")) {
+        alert("确认密码不能为空");
+        return false;
+    }
+
+    if (!Fn.isEqual("#new_password1", "#new_password2")) {
+        alert("两次密码输入不一致");
+        return false;
+    }
+
+
+    return true;
+}
+
+function reset_pwd() {
+
+    var new_password1 = $("#new_password1").val();
+    var new_password2 = $("#new_password2").val();
+
+
+    $.post('/account/content/reset_pwd/', {
+        'new_password1': new_password1,
+        'new_password2': new_password2,
+        csrfmiddlewaretoken: $.cookie('csrftoken')
+    }, function(data) {
+
+        if (data.status) {
+
+            alert(data.msg);
+
+            var full_url = "/account/login";
+            window.location.href = full_url;
+
+        } else {
+            alert(data.msg)
+        }
+    });
+}
+
+
+$(document).ready(function() {
+
+
+    $('#btn_submit').on('click', function() {
+
+        // TODO post到后台前 首先检验 密码长度是否符合要求 >8 不能是全数字
+        if (!check_input()) {
+            return false;
+        } else {
+            reset_pwd();
+            return false;
+        }
+
+    });
+});
+</script>
+{% endblock %}

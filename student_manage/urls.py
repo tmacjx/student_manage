@@ -16,36 +16,47 @@ Including another URLconf
 """
 from django.conf.urls import url, include, patterns
 from django.contrib import admin
-from student_manage import ajax
 from core import views as core_view
-from core import ajax as core_ajax
-from student_manage import settings
+from django.conf.urls.static import static
+from django.conf import settings
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     url(r'^graduate/', include('graduate.urls'), name='graduate'),
 
-    url(r'^accounts/login/$',  core_view.login,  name='login'),
+    # url(r'^accounts/login/$',  core_view.login,  name='login'),
+    #
+    # url(r'^accounts/logout/$', core_view.logout, name='logout'),
 
-    url(r'^accounts/logout/$', core_view.logout, name='logout'),
+    url(r'^account/', include('core.urls'), name='account'),
 
     url(r'^superadmin/$', core_view.super_admin, name='superadmin'),
+    url(r'^secretary/$', core_view.admin, name='secretary'),
+    url(r'^instructor/$', core_view.instructor, name='instructor'),
+    url(r'^student/$', core_view.student, name='student'),
 
 
 ]
 
-urlpatterns += [
+# urlpatterns += [
+#
+#     url(r'^content/index/$', ajax.index),
+#     url(r'^content/login/$', core_ajax.login),
+#     url(r'^content/logout/$', core_ajax.logout)
+# ]
 
-    url(r'^content/index/$', ajax.index),
-    url(r'^content/login/$', core_ajax.login),
-    url(r'^content/logout/$', core_ajax.logout)
-]
+#
+# if settings.DEBUG:
+#     urlpatterns = patterns('',
+#                            url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
+#                                {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
+#                            url(r'', include(
+#                                'django.contrib.staticfiles.urls')),
+#                            ) + urlpatterns
+#
 
 if settings.DEBUG:
-    urlpatterns = patterns('',
-                           url(r'^media/(?P<path>.*)$', 'django.views.static.serve',
-                               {'document_root': settings.MEDIA_ROOT, 'show_indexes': True}),
-                           url(r'', include(
-                               'django.contrib.staticfiles.urls')),
-                           ) + urlpatterns
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
